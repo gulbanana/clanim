@@ -1,0 +1,16 @@
+{
+  "name": "clanim",
+  "scripts": {
+    "build": "esbuild app.tsx --bundle --outfile=dist/out.js --sourcemap",
+    "publish": "esbuild app.tsx --bundle --outfile=dist/out.min.js --minify"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
+    "esbuild": "^0.14.23"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}
