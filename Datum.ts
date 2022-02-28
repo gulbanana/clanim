@@ -12,7 +12,7 @@ export const localMetadata = {
 
 export const overseasMetadata = {
     xAccessor: (d: Datum) => d.date,
-    yAccessor: (d: Datum) => d.overseas,
+    yAccessor: (d: Datum) => Math.max(0, d.overseas),
 };
 
 export const averageMetadata = {

@@ -22,7 +22,7 @@ export let Chart: React.FC<ChartProps> = ({series}) => (
             <AnimatedBarSeries dataKey="Acquired Locally" data={series} {...localMetadata} />
             <AnimatedBarSeries dataKey="Acquired Overseas" data={series} {...overseasMetadata} />
         </AnimatedBarStack>
-        <AnimatedLineSeries curve={curve.curveBasis} dataKey="Weekly Average" data={series} {...averageMetadata} />
+        <AnimatedLineSeries curve={curve.curveBasis} strokeWidth={4}  dataKey="Weekly Average" data={series} {...averageMetadata} />
         <Tooltip<Datum>
             snapTooltipToDatumX
             snapTooltipToDatumY
@@ -33,9 +33,9 @@ export let Chart: React.FC<ChartProps> = ({series}) => (
                     <div style={{ color: colorScale(tooltipData.nearestDatum!.key) }}>
                         {tooltipData.nearestDatum!.datum.date}
                     </div>
-                    {tooltipData.nearestDatum!.datum.local}
+                    {localMetadata.yAccessor(tooltipData.nearestDatum!.datum)}
                     {" local, "}
-                    {tooltipData.nearestDatum!.datum.overseas}
+                    {overseasMetadata.yAccessor(tooltipData.nearestDatum!.datum)}
                     {" overseas"}
                 </div>
             )}
