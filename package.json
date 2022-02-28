@@ -1,8 +1,9 @@
 {
   "name": "clanim",
   "scripts": {
-    "build": "esbuild app.tsx --bundle --outfile=dist/out.js --sourcemap",
-    "publish": "esbuild app.tsx --bundle --outfile=dist/out.min.js --minify"
+    "build": "esbuild app.tsx --bundle --outfile=dist/app.js --sourcemap",
+    "publish": "esbuild app.tsx --bundle --outfile=dist/app.min.js --minify",
+    "serve": "npm run build -- --servedir=dist"
   },
   "devDependencies": {
     "@types/react": "^17.0.39",
@@ -10,6 +11,7 @@
     "esbuild": "^0.14.23"
   },
   "dependencies": {
+    "@visx/xychart": "^2.9.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   }
