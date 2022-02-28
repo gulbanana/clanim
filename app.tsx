@@ -1,55 +1,44 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {
-    Axis,
-    Grid,
-    LineSeries,
-    XYChart,
-    Tooltip,
-} from '@visx/xychart';
+import { getCovidLiveWA } from './scrape';
+import { Chart } from './Chart';
+import { Datum } from './Datum';
 
-type Datum = {x: string, y: number};
+let firstWeekData = [
+    {"date": "21-Dec-21", "overseas": 1, "local": 0},
+    {"date": "20-Dec-21", "overseas": 0, "local": 0},
+    {"date": "19-Dec-21", "overseas": 0, "local": 0},
+    {"date": "18-Dec-21", "overseas": 0, "local": 0},
+    {"date": "17-Dec-21", "overseas": 0, "local": 0},
+    {"date": "16-Dec-21", "overseas": 0, "local": 0},
+    {"date": "15-Dec-21", "overseas": 0, "local": 0}
+].reverse();
 
-let data1 = [
-    { x: '2020-01-01', y: 50 },
-    { x: '2020-01-02', y: 10 },
-    { x: '2020-01-03', y: 20 },
-];
+let Loader = () => {
+    let [data, setData] = React.useState<Datum[]>(firstWeekData);
 
-let data2 = [
-    { x: '2020-01-01', y: 30 },
-    { x: '2020-01-02', y: 40 },
-    { x: '2020-01-03', y: 80 },
-];
+    React.useEffect(() => {
+        async function loadSlowly() {
+            let realData = await getCovidLiveWA();
+            for (let i = 7; i <= realData.length; i++) {
+                let partialData = realData.slice(0, i);
+                setData(partialData);
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+        }
 
-let accessors = {
-    xAccessor: (d: Datum) => d.x,
-    yAccessor: (d: Datum) => d.y,
-};
+        loadSlowly();
+    }, []);
 
-let Chart = () => (
-    <XYChart height={300} xScale={{ type: 'band' }} yScale={{ type: 'linear' }}>
-      <Axis orientation="bottom" />
-      <Grid columns={false} numTicks={4} />
-      <LineSeries dataKey="Line 1" data={data1} {...accessors} />
-      <LineSeries dataKey="Line 2" data={data2} {...accessors} />
-      <Tooltip<Datum>
-        snapTooltipToDatumX
-        snapTooltipToDatumY
-        showVerticalCrosshair
-        showSeriesGlyphs
-        renderTooltip={({ tooltipData, colorScale }) => (!tooltipData || !colorScale) ? "" : (
-          <div>
-            <div style={{ color: colorScale(tooltipData.nearestDatum!.key) }}>
-              {tooltipData.nearestDatum!.key}
-            </div>
-            {accessors.xAccessor(tooltipData.nearestDatum!.datum)}
-            {', '}
-            {accessors.yAccessor(tooltipData.nearestDatum!.datum)}
-          </div>
-        )}
-      />
-    </XYChart>
-  );
+    for (let i = 6; i < data.length; i++) {
+        let average = 0;
+        for (let j = 0; j < 7; j++) {
+            average += data[i-j].local + data[i-j].overseas;
+        }
+        data[i].average = Math.floor(average / 7);
+    }
 
-ReactDOM.render(<Chart/>, document.body);
+    return <Chart series={data} />;
+}
+
+ReactDOM.render(<Loader />, document.getElementById("app"));
