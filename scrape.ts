@@ -4,7 +4,7 @@ import fallbackData from './fallback.json';
 export async function getCovidLiveWA(): Promise<Datum[]> {
     try
     {
-        let response = await fetch("http://cors.thomascastiglione.com/covidlive.com.au/report/daily-source-overseas/wa");
+        let response = await fetch("https://cors.thomascastiglione.com/covidlive.com.au/report/daily-source-overseas/wa");
         let text = await response.text();
         let parser = new DOMParser();
         let doc = parser.parseFromString(text, "text/html");        
